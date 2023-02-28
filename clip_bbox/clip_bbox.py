@@ -6,6 +6,9 @@ import torch
 import sys
 import os
 
+# TODO: generalize path
+sys.path.append("/local/gsu/scratch/clip_bbox/clip")
+
 from model import *
 from newpad import *
 
@@ -47,13 +50,12 @@ print("Context length:", context_length)
 print("Vocab size:", vocab_size)
 
 
-sys.path.append("/local/gsu/scratch/clip_bbox/clip")
 
-
+# print("model res: ", clip_model.state_dict()["input_resolution"])
 clip_model.state_dict()["input_resolution"] = torch.tensor([720, 1280])
 print("Model's state_dict:")
 for param_tensor in clip_model.state_dict():
-    # print(param_tensor + '            ' + str(model_old.state_dict()[param_tensor].size()))
+    # print(param_tensor + '            ' + str(clip_model.state_dict()[param_tensor].size()))
     clip_model.state_dict()[param_tensor] = clip_model.state_dict()[param_tensor].cuda()
 
 # parallelize
@@ -69,9 +71,7 @@ from PIL import Image
 
 preprocess = Compose(
     [
-        NewPad(),
         Resize(input_resolution, interpolation=Image.BICUBIC),
-        CenterCrop(input_resolution),
         ToTensor(),
     ]
 )
@@ -86,8 +86,6 @@ from functools import lru_cache
 
 import ftfy
 import regex as re
-
-# os.system("wget https://openaipublic.azureedge.net/clip/bpe_simple_vocab_16e6.txt.gz -O bpe_simple_vocab_16e6.txt.gz")
 
 
 @lru_cache()
@@ -247,13 +245,13 @@ descriptions = {
     "coffee": "a cup of coffee on a saucer",
 }
 
-import math
 import torch.nn.functional as F
 
 
 def img_fts_to_heatmap(img_fts, txt_fts):
     """
-    img_fts: list of image features with no global avg pooling layer, shape=(img_dim x img_dim, batch_size, features)
+    img_fts: list of image features with no global avg pooling layer, 
+    shape=(img_dim x img_dim, batch_size, features)
     Return: list of heatmaps
     """
 
@@ -265,9 +263,10 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     print(batch_size)
 
     # img_norm = F.interpolate(img_norm.permute(2,1,0), size=int(input_resolution[0]*input_resolution[1]/64), mode='nearest').permute(2,1,0)
-    resize = torch.flatten(img_norm).size()[0] / batch_size / img_fts.size()[0]
-    resize = int(math.sqrt(resize))
+    # resize = torch.flatten(img_norm).size()[0] / batch_size / img_fts.size()[0]
+    # resize = int(math.sqrt(resize))
     img_reshape = torch.reshape(img_norm, (22, 40, batch_size, img_fts.size()[2]))
+    # img_reshape = torch.reshape(img_norm, (7, 7, batch_size, 1024))
     # img_reshape = torch.reshape(img_norm, (resize, resize, batch_size, img_fts.size()[0]))
     print(img_reshape.shape)
     print(txt_norm.shape)
@@ -294,8 +293,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
 
 # bbox generation config
 rel_peak_thr = 0.6
-rel_rel_thr = 0.3
-ioa_thr = 0.6
+rel_rel_thr = 0.5
+ioa_thr = 0.4
 topk_boxes = 3
 
 from skimage.feature import peak_local_max
@@ -393,16 +392,13 @@ def img_heat_bbox_disp(
     cmap="viridis",
     cbar="False",
     dot_max=False,
-    pred_bboxes=[],
-    gt_bboxes=[],
+    bboxes=[],
     order=None,
 ):
-    thr_hit = 1  # a bbox is acceptable if hit point is in middle 85% of bbox area
-    thr_fit = 0.60  # the biggest acceptable bbox should not exceed 60% of the image
+    
     H, W = image.shape[0:2]
     # resize heat map
     heat_map_resized = cv2.resize(heat_map, (W, H))
-    print(heat_map_resized.shape)
     # display
     fig = plt.figure(figsize=(15, 15))
     fig.suptitle(title, size=15)
@@ -622,7 +618,7 @@ tokenizer = SimpleTokenizer()
 text_tokens = [tokenizer.encode("This is " + desc) for desc in texts]
 
 
-text_input = torch.zeros(len(text_tokens), clip_model.context_length, dtype=torch.long)
+text_input = torch.zeros(len(text_tokens), model_modded.context_length, dtype=torch.long)
 sot_token = tokenizer.encoder["<|startoftext|>"]
 eot_token = tokenizer.encoder["<|endoftext|>"]
 
@@ -634,11 +630,12 @@ text_input = text_input.cuda()
 
 
 with torch.no_grad():
-    image_features = clip_model.encode_image(image_input).float()
-    text_features = clip_model.encode_text(text_input).float()
+    image_features = model_modded.encode_image(image_input).float()
+    text_features = model_modded.encode_text(text_input).float()
 
 # get bbox results
 img_fts = image_features[1:]
+print("fts size: ", img_fts.size())
 
 heatmap_list = img_fts_to_heatmap(img_fts, text_features)
 pred_bboxes = []
@@ -651,7 +648,7 @@ for h in range(len(heatmap_list)):
     )
     save_path = "img_{}_bbox.png".format(h)
     img_heat_bbox_disp(
-        image_input, heat, save_path, title=title, bboxes=bboxes, order="xyxy"
+        images[h].permute(1, 2, 0).cpu(), heat, save_path, title=title, bboxes=bboxes, order="xyxy"
     )
 
 
@@ -660,5 +657,5 @@ for h in range(len(heatmap_list)):
 
 # TODO: Write results to dict
 # TODO: how to handle when len(pred_bboxes) != len(gt_bboxes) ?
-for j in range(len(pred_bboxes[0])):
-    pred_bboxes[0][j] = pred_bboxes[0][j].squeeze(0).tolist()
+# for j in range(len(pred_bboxes[0])):
+#     pred_bboxes[0][j] = pred_bboxes[0][j].squeeze(0).tolist()
