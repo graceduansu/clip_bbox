@@ -14,12 +14,6 @@ format:  ## run autoformatting with black
 # alias
 fix: format
 
-check:  ## check assets for packaging
-	check-manifest -v
-
-# Alias
-checks: check
-
 annotate:  ## run type checking
 	python -m mypy ./clip_bbox
 
@@ -27,10 +21,10 @@ annotate:  ## run type checking
 # TESTS #
 #########
 test: ## clean and run unit tests
-	python -m pytest -v clip_bbox/tests
+	python -m pytest -v ./clip_bbox/tests
 
 coverage:  ## clean and run unit tests with coverage
-	python -m pytest -v clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
+	python -m pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
 
 # Alias
 tests: test
