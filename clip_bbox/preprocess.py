@@ -150,6 +150,7 @@ class SimpleTokenizer(object):
     def __init__(self, bpe_path: str = "bpe_simple_vocab_16e6.txt.gz"):
         self.byte_encoder = bytes_to_unicode()
         self.byte_decoder = {v: k for k, v in self.byte_encoder.items()}
+        print(bpe_path)
         merges = gzip.open(bpe_path).read().decode("utf-8").split("\n")
         merges = merges[1 : 49152 - 256 - 2 + 1]
         merges = [tuple(merge.split()) for merge in merges]
