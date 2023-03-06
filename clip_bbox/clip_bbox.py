@@ -2,7 +2,7 @@
 
 import torch
 
-import clip_model_setup, bbox_utils, preprocess
+from . import clip_model_setup, bbox_utils, preprocess
 
 # TODO: arg parser for bbox params
 
@@ -81,3 +81,7 @@ def img_fts_to_heatmap(img_fts, txt_fts):
         heatmap_list.append(hm)
 
     return heatmap_list
+
+
+if __name__ == "__main__":
+    run_clip_bbox(input_res=(720, 1280))

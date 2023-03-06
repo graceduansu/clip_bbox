@@ -1,8 +1,10 @@
 import numpy as np
 import torch
 import os
+import os
+from clip.model import build_model
 
-from ..clip.model import build_model
+# os.path.abspath(os.path.dirname(__file__))
 
 MODELS = {
     "RN50": "https://openaipublic.azureedge.net/clip/models/"
@@ -27,7 +29,7 @@ def get_clip_model(model_name="RN50", input_res=(720, 1280)):
     print(device)
 
     input_resolution = input_res
-    os.system("wget {} -O model.pt".format(MODELS[model_name]))
+    # os.system("wget {} -O model.pt".format(MODELS[model_name]))
 
     clip_model = torch.jit.load("model.pt").cuda().eval()
     context_length = clip_model.context_length.item()
