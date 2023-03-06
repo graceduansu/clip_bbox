@@ -2,7 +2,8 @@
 
 import torch
 
-from . import clip_model_setup, bbox_utils, preprocess
+# TODO: why does from . not work when name = main
+import clip_model_setup, bbox_utils, preprocess
 
 # TODO: arg parser for bbox params
 

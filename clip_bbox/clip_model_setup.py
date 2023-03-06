@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 import os
-import os
 from clip.model import build_model
 
 # os.path.abspath(os.path.dirname(__file__))
