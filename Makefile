@@ -1,4 +1,16 @@
 #########
+# BUILD #
+#########
+develop:  ## install dependencies and build library
+	python -m pip install -r requirements.txt
+
+build:  ## build the python library
+	python setup.py build build_ext --inplace
+
+# install:  ## install library
+# 	python -m pip install .
+
+#########
 # LINTS #
 #########
 lint:  ## run static analysis with flake8
@@ -13,6 +25,12 @@ format:  ## run autoformatting with black
 
 # alias
 fix: format
+
+check:  ## check assets for packaging
+	check-manifest -v
+
+# Alias
+checks: check
 
 annotate:  ## run type checking
 	python -m mypy ./clip_bbox
@@ -48,4 +66,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: lint lints format fix check checks annotate test coverage show-coverage tests show-version deep-clean clean help
+.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version deep-clean clean help
