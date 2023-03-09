@@ -2,7 +2,8 @@
 # CLIP_BBox
 
 `CLIP_BBox` is a Python library for detecting image objects with natural language text labels. 
-
+[![Build Status](https://github.com/graceduansu/clip_bbox/workflows/Build%20Status/badge.svg?branch=main)](https://github.com/graceduansu/clip_bbox/actions?query=workflow%3A%22Build+Status%22)
+[![codecov](https://codecov.io/gh/graceduansu/clip_bbox/branch/main/graph/badge.svg)](https://codecov.io/gh/graceduansu/clip_bbox)
 [![GitHub](https://img.shields.io/github/license/graceduansu/clip_bbox)](./LICENSE)
 ![GitHub issues](https://img.shields.io/github/issues/graceduansu/clip_bbox)
 
