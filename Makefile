@@ -2,8 +2,7 @@
 # BUILD #
 #########
 develop:  ## install dependencies and build library
-	conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=11.0
-	pip install ftfy regex tqdm
+	pip install -r requirements.txt
 
 build:  ## build the python library
 	python setup.py build build_ext --inplace
@@ -48,6 +47,36 @@ coverage:  ## clean and run unit tests with coverage
 # Alias
 tests: test
 
+###########
+# VERSION #
+###########
+show-version:
+	bump2version --dry-run --allow-dirty setup.py --list | grep current | awk -F= '{print $2}'
+
+patch:
+	bump2version patch
+
+minor:
+	bump2version minor
+
+major:
+	bump2version major
+
+########
+# DIST #
+########
+dist-build:  # Build python dist
+	python setup.py sdist bdist_wheel
+
+dist-check:
+	python -m twine check dist/*
+
+dist: clean build dist-build dist-check  ## Build dists
+
+publish:  # Upload python assets
+	echo "would usually run python -m twine upload dist/* --skip-existing"
+
+
 #########
 # CLEAN #
 #########
@@ -67,4 +96,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version deep-clean clean help
+.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version patch minor major dist-build dist-check dist publish deep-clean clean help
