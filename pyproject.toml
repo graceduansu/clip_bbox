@@ -66,7 +66,8 @@ ignore = ['E203', 'W503', 'E741']
 max-line-length=120
 per-file-ignores= [
     'clip_bbox/__init__.py:F401, F403',
-    'clip_bbox/clip/__init__.py:F401, F403'
+    'clip_bbox/clip/__init__.py:F401, F403',
+    'clip_bbox/tests/__init__.py:F401, F403'
 ]
 
 [tool.isort]

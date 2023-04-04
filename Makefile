@@ -2,7 +2,8 @@
 # BUILD #
 #########
 develop:  ## install dependencies and build library
-	python -m pip install -r requirements.txt
+	conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=11.0
+	pip install ftfy regex tqdm
 
 build:  ## build the python library
 	python setup.py build build_ext --inplace
@@ -39,10 +40,10 @@ annotate:  ## run type checking
 # TESTS #
 #########
 test: ## clean and run unit tests
-	python -m pytest -v ./clip_bbox/tests
+	pytest -v ./clip_bbox/tests
 
 coverage:  ## clean and run unit tests with coverage
-	python -m pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
+	pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
 
 # Alias
 tests: test
