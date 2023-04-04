@@ -23,6 +23,18 @@ descriptions = {
 
 
 def preprocess_imgs(input_resolution=(720, 1280)):
+    """Preprocess list of images for CLIP.
+
+    Args:
+        input_res (tuple[int]): Input resolution represented as (height, width)
+
+    Returns:
+        List: List of PIL Images (BGR format)
+        Torch tensor: Array of images preprocessed as a
+        Torch tensor (RGB format)
+
+    """
+
     preprocess = Compose(
         [
             Resize(input_resolution, interpolation=Image.BICUBIC),
@@ -55,6 +67,15 @@ def preprocess_imgs(input_resolution=(720, 1280)):
 
 
 def preprocess_texts(context_length):
+    """Preprocess list of texts for CLIP.
+
+    Args:
+        context_length (int): CLIP model parameter
+
+    Returns:
+        Torch tensor: Array of preprocessed texts
+
+    """
     texts = []
     for filename in [
         filename for filename in os.listdir(skimage.data_dir) if filename.endswith(".png") or filename.endswith(".jpg")
@@ -79,6 +100,3 @@ def preprocess_texts(context_length):
     text_input = text_input.cuda()
 
     return text_input
-
-
-# TEXT PREPROCESSING UTILS
