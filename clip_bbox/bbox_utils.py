@@ -28,27 +28,25 @@ def heat2bbox(heat_map, original_image_shape):
 
     heat_resized = cv2.resize(
         heat_map, (original_image_shape[1], original_image_shape[0])
-    )  ## resize heat map to original image shape
-    peak_coords_resized = (
-        (peak_coords + 0.5) * np.asarray([original_image_shape]) / np.asarray([[h, w]])
-    ).astype("int32")
+    )  # resize heat map to original image shape
+    peak_coords_resized = ((peak_coords + 0.5) * np.asarray([original_image_shape]) / np.asarray([[h, w]])).astype(
+        "int32"
+    )
 
     for pk_coord in peak_coords_resized:
         pk_value = heat_resized[tuple(pk_coord)]
         mask = heat_resized > pk_value * rel_rel_thr
         labeled, n = ndi.label(mask)
-        l = labeled[tuple(pk_coord)]
-        yy, xx = np.where(labeled == l)
+        l_pks = labeled[tuple(pk_coord)]
+        yy, xx = np.where(labeled == l_pks)
         min_x = np.min(xx)
         min_y = np.min(yy)
         max_x = np.max(xx)
         max_y = np.max(yy)
         bboxes.append((min_x, min_y, max_x, max_y))
-        box_scores.append(
-            pk_value
-        )  # you can change to pk_value * probability of sentence matching image or etc.
+        box_scores.append(pk_value)  # you can change to pk_value * probability of sentence matching image or etc.
 
-    ## Merging boxes that overlap too much
+    # Merging boxes that overlap too much
     box_idx = np.argsort(-np.asarray(box_scores))
     box_idx = box_idx[: min(topk_boxes, len(box_scores))]
     bboxes = [bboxes[i] for i in box_idx]
@@ -61,9 +59,7 @@ def heat2bbox(heat_map, original_image_shape):
                 continue
             b1 = bboxes[iii]
             b2 = bboxes[iiii]
-            isec = max(min(b1[2], b2[2]) - max(b1[0], b2[0]), 0) * max(
-                min(b1[3], b2[3]) - max(b1[1], b2[1]), 0
-            )
+            isec = max(min(b1[2], b2[2]) - max(b1[0], b2[0]), 0) * max(min(b1[3], b2[3]) - max(b1[1], b2[1]), 0)
             ioa1 = isec / ((b1[2] - b1[0]) * (b1[3] - b1[1]))
             ioa2 = isec / ((b2[2] - b2[0]) * (b2[3] - b2[1]))
             if ioa1 > ioa_thr and ioa1 == ioa2:
@@ -115,13 +111,11 @@ def img_heat_bbox_disp(
     ax = plt.subplot(1, 3, 1)
     plt.imshow(image)
     if dot_max:
-        max_loc = np.unravel_index(
-            np.argmax(heat_map_resized, axis=None), heat_map_resized.shape
-        )
+        max_loc = np.unravel_index(np.argmax(heat_map_resized, axis=None), heat_map_resized.shape)
         plt.scatter(x=max_loc[1], y=max_loc[0], edgecolor="w", linewidth=3)
 
     if len(bboxes) > 0:  # it gets normalized bbox
-        if order == None:
+        if order is None:
             order = "xxyy"
 
         for i in range(len(bboxes)):
@@ -162,7 +156,8 @@ def img_heat_bbox_disp(
                     color="white",
                     fontsize=15,
                 )
-                # an = ax.annotate(en_name, xy=(x_min,y_min), xycoords="data", va="center", ha="center", bbox=dict(boxstyle="round", fc="w"))
+                # an = ax.annotate(en_name, xy=(x_min,y_min), xycoords="data", va="center", ha="center",
+                #   bbox=dict(boxstyle="round", fc="w"))
                 # plt.gca().add_patch(an)
 
     plt.imshow(heat_map_resized, alpha=alpha, cmap=cmap)

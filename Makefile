@@ -1,4 +1,17 @@
 #########
+# BUILD #
+#########
+develop:  ## install dependencies and build library
+	conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=11.0
+	pip install ftfy regex tqdm
+
+build:  ## build the python library
+	python setup.py build build_ext --inplace
+
+# install:  ## install library
+# 	python -m pip install .
+
+#########
 # LINTS #
 #########
 lint:  ## run static analysis with flake8
@@ -14,6 +27,12 @@ format:  ## run autoformatting with black
 # alias
 fix: format
 
+check:  ## check assets for packaging
+	check-manifest -v
+
+# Alias
+checks: check
+
 annotate:  ## run type checking
 	python -m mypy ./clip_bbox
 
@@ -21,10 +40,10 @@ annotate:  ## run type checking
 # TESTS #
 #########
 test: ## clean and run unit tests
-	python -m pytest -v ./clip_bbox/tests
+	pytest -v ./clip_bbox/tests
 
 coverage:  ## clean and run unit tests with coverage
-	python -m pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
+	pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
 
 # Alias
 tests: test
@@ -48,4 +67,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: lint lints format fix check checks annotate test coverage show-coverage tests show-version deep-clean clean help
+.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version deep-clean clean help
