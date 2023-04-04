@@ -2,18 +2,11 @@ from torchvision.transforms import Compose, Resize, ToTensor
 from PIL import Image
 import torch
 
-import gzip
-import html
-from functools import lru_cache
-
-import ftfy
-import regex as re
-
 import os
 import skimage
 import numpy as np
 
-from clip.simple_tokenizer import *
+from clip.simple_tokenizer import SimpleTokenizer
 
 
 # TODO: allow other img+text pair inputs
@@ -43,17 +36,13 @@ def preprocess_imgs(input_resolution=(720, 1280)):
     images = []
 
     for filename in [
-        filename
-        for filename in os.listdir(skimage.data_dir)
-        if filename.endswith(".png") or filename.endswith(".jpg")
+        filename for filename in os.listdir(skimage.data_dir) if filename.endswith(".png") or filename.endswith(".jpg")
     ]:
         name = os.path.splitext(filename)[0]
         if name not in descriptions:
             continue
 
-        image = preprocess(
-            Image.open(os.path.join(skimage.data_dir, filename)).convert("RGB")
-        )
+        image = preprocess(Image.open(os.path.join(skimage.data_dir, filename)).convert("RGB"))
         images.append(image)
 
     image_input = torch.tensor(np.stack(images)).cuda()
@@ -68,9 +57,7 @@ def preprocess_imgs(input_resolution=(720, 1280)):
 def preprocess_texts(context_length):
     texts = []
     for filename in [
-        filename
-        for filename in os.listdir(skimage.data_dir)
-        if filename.endswith(".png") or filename.endswith(".jpg")
+        filename for filename in os.listdir(skimage.data_dir) if filename.endswith(".png") or filename.endswith(".jpg")
     ]:
         name = os.path.splitext(filename)[0]
         if name not in descriptions:

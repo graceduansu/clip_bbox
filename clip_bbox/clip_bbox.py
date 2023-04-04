@@ -3,7 +3,9 @@
 import torch
 
 # TODO: why does from . not work when name = main
-import clip_model_setup, bbox_utils, preprocess
+import clip_model_setup
+import bbox_utils
+import preprocess
 
 # TODO: arg parser for bbox params
 
@@ -29,9 +31,7 @@ def run_clip_bbox(input_res):
         title = "Image " + str(h)
         heat = heatmap_list[h]
         bboxes = bbox_utils.heat2bbox(heat, input_resolution)
-        pred_bboxes.append(
-            [torch.tensor(b["bbox_normalized"]).unsqueeze(0) for b in bboxes]
-        )
+        pred_bboxes.append([torch.tensor(b["bbox_normalized"]).unsqueeze(0) for b in bboxes])
         save_path = "img_{}_bbox.png".format(h)
         bbox_utils.img_heat_bbox_disp(
             images[h].permute(1, 2, 0).cpu(),
@@ -57,7 +57,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     batch_size = len(txt_norm)
     print(batch_size)
 
-    # img_norm = F.interpolate(img_norm.permute(2,1,0), size=int(input_resolution[0]*input_resolution[1]/64), mode='nearest').permute(2,1,0)
+    # img_norm = F.interpolate(img_norm.permute(2,1,0), size=int(input_resolution[0]*input_resolution[1]/64),
+    #      mode='nearest').permute(2,1,0)
     # resize = torch.flatten(img_norm).size()[0] / batch_size / img_fts.size()[0]
     # resize = int(math.sqrt(resize))
     img_reshape = torch.reshape(img_norm, (22, 40, batch_size, img_fts.size()[2]))
