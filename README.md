@@ -8,6 +8,7 @@
 [![GitHub](https://img.shields.io/github/license/graceduansu/clip_bbox)](./LICENSE)
 ![GitHub issues](https://img.shields.io/github/issues/graceduansu/clip_bbox)
 [![PyPI](https://img.shields.io/pypi/v/clip-bbox)](https://pypi.org/project/clip-bbox/)
+[![Documentation Status](https://readthedocs.org/projects/clip-bbox/badge/?version=latest)](https://clip-bbox.readthedocs.io/en/latest/?badge=latest)
 
 
 ## Overview
@@ -28,7 +29,7 @@ The library will provide functions for the following operations:
 
 Use pip to install clip_bbox as a Python package:
 
-    $ pip install clip_bbox
+    $ pip install clip-bbox
 
 ## Example Usage
 
