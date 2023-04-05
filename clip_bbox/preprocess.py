@@ -6,7 +6,7 @@ import os
 import skimage
 import numpy as np
 
-from clip.simple_tokenizer import SimpleTokenizer
+from simple_tokenizer import SimpleTokenizer
 
 
 # TODO: allow other img+text pair inputs

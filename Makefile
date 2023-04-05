@@ -39,10 +39,10 @@ annotate:  ## run type checking
 # TESTS #
 #########
 test: ## clean and run unit tests
-	pytest -v ./clip_bbox/tests
+	python -m pytest -v clip_bbox/tests
 
 coverage:  ## clean and run unit tests with coverage
-	pytest -v ./clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
+	python -m pytest -v clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
 
 # Alias
 tests: test
@@ -84,7 +84,7 @@ deep-clean: ## clean everything from the repository
 	git clean -fdx
 
 clean: ## clean the repository
-	rm -rf .coverage coverage cover htmlcov logs build dist *.egg-info .pytest_cache
+	rm -rf .coverage coverage cover htmlcov logs build dist *.egg-info .pytest_cache .mypy_cache
 
 ########
 # DOCS #
