@@ -26,5 +26,13 @@ Using the `run_clip_bbox()` will result in an output image displaying the origin
 
 Here is an example output image:
 ```eval_rst
-.. image:: images/example_output.png
+.. image:: ../images/example_output.png
+```
+
+```eval_rst
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents
+
+   source/modules
 ```
