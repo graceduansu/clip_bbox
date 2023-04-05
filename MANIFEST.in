@@ -7,9 +7,11 @@ include .bumpversion.cfg
 include .readthedocs.yml
 include pyproject.toml
 include Makefile
+include requirements.txt
+include docs/images/example_output.png
+
 
 recursive-include docs *.bat
-recursive-include docs *.png
 recursive-include docs *.md
 recursive-include docs *.py
 recursive-include docs *.rst
@@ -19,6 +21,7 @@ recursive-include docs Makefile
 prune .github
 exclude .gitignore
 exclude .gitattributes
+exclude clip_bbox/*.png
 
 # Patterns to exclude from any directory
 global-exclude *~
@@ -27,3 +30,5 @@ global-exclude *.pyo
 global-exclude .git
 global-exclude .ipynb_checkpoints
 global-exclude .DS_Store
+global-exclude *.gz
+global-exclude *.pt

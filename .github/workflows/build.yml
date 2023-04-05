@@ -41,9 +41,9 @@ jobs:
     - name: Lint
       run: |
         make lint
-    # - name: Checks
-    #   run: |
-    #     make checks
+    - name: Checks
+      run: |
+        make checks
     - name: Test
       run: |
         make coverage
