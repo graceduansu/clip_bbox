@@ -7,6 +7,8 @@
 [![codecov](https://codecov.io/gh/graceduansu/clip_bbox/branch/main/graph/badge.svg)](https://codecov.io/gh/graceduansu/clip_bbox)
 [![GitHub](https://img.shields.io/github/license/graceduansu/clip_bbox)](./LICENSE)
 ![GitHub issues](https://img.shields.io/github/issues/graceduansu/clip_bbox)
+[![PyPI](https://img.shields.io/pypi/v/clip-bbox)](https://pypi.org/project/clip-bbox/)
+
 
 ## Overview
 
