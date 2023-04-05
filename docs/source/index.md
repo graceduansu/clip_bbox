@@ -4,7 +4,7 @@
 
 Use pip to install clip_bbox as a Python package:
 
-    $ pip install clip_bbox
+    $ pip install clip-bbox
 
 ### Use As a Command Line Script
 
@@ -34,5 +34,5 @@ Here is an example output image:
    :maxdepth: 1
    :caption: Contents
 
-   source/modules
+   modules.rst
 ```

@@ -28,7 +28,7 @@ The library will provide functions for the following operations:
 
 Use pip to install clip_bbox as a Python package:
 
-    $ pip install clip_bbox
+    $ pip install clip-bbox
 
 ## Example Usage
 
