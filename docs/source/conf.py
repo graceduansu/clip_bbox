@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../'))
 project = 'clip_bbox'
 copyright = '2023, Grace Su'
 author = 'Grace Su'
-release = '0.1.0'
+release = "0.1.0"
 
 master_doc = 'index'
 
