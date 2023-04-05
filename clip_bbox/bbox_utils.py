@@ -12,6 +12,18 @@ topk_boxes = 3
 
 
 def heat2bbox(heat_map, original_image_shape):
+    """Calculate bounding boxes on a 2D heatmap.
+
+    Args:
+        heat_map (numpy array): 2D heatmap of values
+        original_image_shape (tuple[int]): original image's
+        dimensions represented as (height, width)
+
+    Returns:
+        List[tuple[int]]: List of bounding boxes, where each bounding
+        box is a tuple of coordinates (min_x, min_y, max_x, max_y)
+
+    """
     h, w = heat_map.shape
 
     bounding_boxes = []
@@ -102,6 +114,27 @@ def img_heat_bbox_disp(
     bboxes=[],
     order=None,
 ):
+    """Draw bounding boxes on image and overlay the
+    corresponding heatmap.
+
+    Args:
+        image (numpy array): Image stored in RGB format
+        heat_map (numpy array): 2D heatmap of values
+        save_path (str): Save path for generated figure
+        title (str): Title on generated figure
+        en_name (str): Text inside figure
+        alpha (float): Transparency of heatmap
+        cmap (str): Matplotlib color map parameter applied to heatmap
+        cbar (bool): Show or hide color bar for heatmap
+        dot_max (bool): Show or hide dots where the heatmap reaches max values
+        bboxes (List[List[int]]): List of bounding boxes
+        order (str): The order of coordinates used for bboxes
+
+    Returns:
+        Matplotlib figure
+
+    """
+
     H, W = image.shape[0:2]
     # resize heat map
     heat_map_resized = cv2.resize(heat_map, (W, H))

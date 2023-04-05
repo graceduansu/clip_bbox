@@ -11,6 +11,18 @@ from . import preprocess
 
 
 def run_clip_bbox(input_res):
+    """Draws bounding boxes on an input image.
+
+    Args:
+        input_res (tuple[int]): Input resolution represented as (height, width)
+
+    Returns:
+        None
+
+    """
+
+    # TODO: add argument for image path
+
     input_resolution = input_res
     model_modded = clip_model_setup.get_clip_model()
 
@@ -44,10 +56,17 @@ def run_clip_bbox(input_res):
 
 
 def img_fts_to_heatmap(img_fts, txt_fts):
-    """
-    img_fts: list of image features with no global avg pooling layer,
-    shape=(img_dim x img_dim, batch_size, features)
-    Return: list of heatmaps
+    """Computes the similarity heatmap between a pair of
+    image and text embeddings from CLIP.
+
+    Args:
+        img_fts (numpy array): Image embedding from CLIP
+        txt_fts (numpy array): Text embedding from CLIP
+
+    Returns:
+        numpy array: Similarity heatmap between
+        the image and text embeddings
+
     """
 
     # dot product with normalization

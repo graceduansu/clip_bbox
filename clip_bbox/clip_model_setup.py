@@ -29,6 +29,17 @@ MODELS = {
 
 
 def get_clip_model(model_name="RN50", input_res=(720, 1280)):
+    """Downloads pre-trained CLIP model and adjusts model to accept
+    desired input resolution.
+
+    Args:
+        model_name (str): Description of arg1
+        input_res (tuple[int]): Input resolution represented as (height, width)
+
+    Returns:
+        Modified Torch model accepting the desired input resolution
+
+    """
     print("Torch version:", torch.__version__)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
