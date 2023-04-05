@@ -2,13 +2,13 @@
 # BUILD #
 #########
 develop:  ## install dependencies and build library
-	pip install -r requirements.txt
+	python -m pip install -e .[develop]
 
 build:  ## build the python library
 	python setup.py build build_ext --inplace
 
-# install:  ## install library
-# 	python -m pip install .
+install:  ## install library
+	python -m pip install .
 
 #########
 # LINTS #
