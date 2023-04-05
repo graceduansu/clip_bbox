@@ -1,6 +1,6 @@
 *.txt.gz
 *.pt 
-*.png
+clip_bbox/*.png
 
 .vscode/
 
