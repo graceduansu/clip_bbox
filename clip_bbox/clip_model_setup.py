@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from model import build_model
+from .model import build_model
 
 # os.path.abspath(os.path.dirname(__file__))
 

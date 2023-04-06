@@ -1,13 +1,11 @@
 clip_bbox package
 ====================
 
-Submodules
-----------
 
-clip_bbox.clip_bbox module
+clip_bbox.clipbbox module
 --------------------------------
 
-.. automodule:: clip_bbox.clip_bbox
+.. automodule:: clip_bbox.clipbbox
    :members:
    :undoc-members:
    :show-inheritance:
