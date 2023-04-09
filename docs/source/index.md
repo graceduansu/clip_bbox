@@ -31,7 +31,7 @@ Here is an example output image:
 
 ```eval_rst
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 4
    :caption: Contents
 
    modules.rst
