@@ -85,6 +85,7 @@ deep-clean: ## clean everything from the repository
 
 clean: ## clean the repository
 	rm -rf .coverage coverage cover htmlcov logs build dist *.egg-info .pytest_cache .mypy_cache
+	$(MAKE) -C docs/ clean
 
 ########
 # DOCS #
@@ -94,16 +95,6 @@ TMPREPO=/tmp/docs/clip_bbox
 docs:
 	$(MAKE) -C docs/ clean
 	$(MAKE) -C docs/ html
-
-pages: 
-	rm -rf $(TMPREPO)
-	git clone -b gh-pages https://github.com/graceduansu/clip_bbox.git $(TMPREPO)
-	rm -rf $(TMPREPO)/*
-	cp -r docs/_build/html/* $(TMPREPO)
-	cd $(TMPREPO);\
-	git add -A ;\
-	git commit -a -m 'auto-updating docs' ;\
-	git push
 
 ############################################################################################
 
@@ -115,4 +106,4 @@ help:
 print-%:
 	@echo '$*=$($*)'
 
-.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version patch minor major dist-build dist-check dist publish deep-clean clean docs pages help
+.PHONY: develop build install lint lints format fix check checks annotate test coverage show-coverage tests show-version patch minor major dist-build dist-check dist publish deep-clean clean docs help

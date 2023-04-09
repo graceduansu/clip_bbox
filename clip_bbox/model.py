@@ -89,6 +89,8 @@ class AttentionPool2d(nn.Module):
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)  # (HW+1)NC
         # x = x + self.positional_embedding[:, None, :].to(x.dtype)  # (HW+1)NC
         temp = self.positional_embedding[:, None, :].to(x.dtype)
+
+        # TODO: Document these modifications
         temp = temp.permute(2, 1, 0)
         temp = F.interpolate(temp, size=x.shape[0], mode="linear").permute(2, 1, 0)
 
@@ -115,6 +117,7 @@ class AttentionPool2d(nn.Module):
             need_weights=False,
         )
 
+        # return x.squeeze(0)
         return x
 
 
