@@ -6,7 +6,7 @@ import numpy as np
 from .simple_tokenizer import SimpleTokenizer
 
 
-def preprocess_imgs(img_path_list, input_resolution=None):
+def preprocess_imgs(img_path_list, device, input_resolution=None):
     """Preprocess list of images for CLIP.
 
     Args:
@@ -29,8 +29,8 @@ def preprocess_imgs(img_path_list, input_resolution=None):
         ]
     )
 
-    image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).cuda()
-    image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).cuda()
+    image_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).to(device)
+    image_std = torch.tensor([0.26862954, 0.26130258, 0.27577711]).to(device)
 
     images = []
 
@@ -38,14 +38,14 @@ def preprocess_imgs(img_path_list, input_resolution=None):
         image = preprocess(Image.open(filename).convert("RGB"))
         images.append(image)
 
-    image_input = torch.tensor(np.stack(images)).cuda()
+    image_input = torch.tensor(np.stack(images)).to(device)
     image_input -= image_mean[:, None, None]
     image_input /= image_std[:, None, None]
 
     return images, image_input
 
 
-def preprocess_texts(caption_list, context_length):
+def preprocess_texts(caption_list, context_length, device):
     """Preprocess list of texts for CLIP.
 
     Args:
@@ -67,6 +67,6 @@ def preprocess_texts(caption_list, context_length):
         tokens = [sot_token] + tokens + [eot_token]
         text_input[i, : len(tokens)] = torch.tensor(tokens)
 
-    text_input = text_input.cuda()
+    text_input = text_input.to(device)
 
     return text_input

@@ -29,7 +29,7 @@ MODELS = {
 }
 
 
-def get_clip_model(model_name="RN50", input_res=(720, 1280)):
+def get_clip_model(device, model_name="RN50", input_res=(720, 1280)):
     """Downloads pre-trained CLIP model and adjusts model to accept
     desired input resolution.
 
@@ -43,15 +43,12 @@ def get_clip_model(model_name="RN50", input_res=(720, 1280)):
     """
     print("Torch version:", torch.__version__)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(device)
-
     input_resolution = input_res
 
     if not os.path.exists("model.pt"):
         os.system("wget {} -O model.pt".format(MODELS[model_name]))
 
-    clip_model = torch.jit.load("model.pt").cuda().eval()
+    clip_model = torch.jit.load("model.pt").eval().to(device)
     context_length = clip_model.context_length.item()
     vocab_size = clip_model.vocab_size.item()
 
@@ -67,12 +64,10 @@ def get_clip_model(model_name="RN50", input_res=(720, 1280)):
     # print("Model's state_dict:")
     for param_tensor in clip_model.state_dict():
         # print(param_tensor + '            ' + str(clip_model.state_dict()[param_tensor].size()))
-        clip_model.state_dict()[param_tensor] = clip_model.state_dict()[param_tensor].cuda()
+        clip_model.state_dict()[param_tensor] = clip_model.state_dict()[param_tensor].to(device)
 
     model_modded = build_model(clip_model.state_dict())
 
-    print("check model cuda: {}".format(next(model_modded.parameters()).is_cuda))
     model_modded.to(device)
-    print("device count: {}".format(torch.cuda.device_count()))
 
     return model_modded

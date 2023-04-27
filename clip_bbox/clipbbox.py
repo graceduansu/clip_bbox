@@ -40,14 +40,16 @@ def run_clip_bbox(img_path, caption, out_path):
         None
 
     """
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     input_resolution = (720, 1280)
-    images, image_input = preprocess.preprocess_imgs([img_path], input_resolution=input_resolution)
+    images, image_input = preprocess.preprocess_imgs([img_path], device, input_resolution=input_resolution)
 
     # TODO: make img_fts_to_heatmap accept all resolutions
     # input_resolution = images[0].size()[1:]
 
-    model_modded = clip_model_setup.get_clip_model(input_res=input_resolution)
-    text_input = preprocess.preprocess_texts([caption], model_modded.context_length)
+    model_modded = clip_model_setup.get_clip_model(device, input_res=input_resolution)
+    text_input = preprocess.preprocess_texts([caption], model_modded.context_length, device)
 
     with torch.no_grad():
         image_features = model_modded.encode_image(image_input).float()
