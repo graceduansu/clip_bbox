@@ -3,6 +3,10 @@ regex
 tqdm
 torch==1.7.1
 torchvision
+opencv-python
+matplotlib
+scikit-image
+scipy
 
 black
 pytest

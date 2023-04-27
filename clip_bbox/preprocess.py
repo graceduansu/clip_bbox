@@ -1,39 +1,26 @@
 from torchvision.transforms import Compose, Resize, ToTensor
 from PIL import Image
 import torch
-
-import os
-import skimage
 import numpy as np
 
 from .simple_tokenizer import SimpleTokenizer
 
 
-# TODO: allow other img+text pair inputs
-descriptions = {
-    "page": "a page of text about segmentation",
-    "chelsea": "a facial photo of a tabby cat",
-    "astronaut": "a portrait of an astronaut with the American flag",
-    "rocket": "a rocket standing on a launchpad",
-    "motorcycle_right": "a red motorcycle standing in a garage",
-    "camera": "a person looking at a camera on a tripod",
-    "horse": "a black-and-white silhouette of a horse",
-    "coffee": "a cup of coffee on a saucer",
-}
-
-
-def preprocess_imgs(input_resolution=(720, 1280)):
+def preprocess_imgs(img_path_list, input_resolution=None):
     """Preprocess list of images for CLIP.
 
     Args:
-        input_res (tuple[int]): Input resolution represented as (height, width)
+        img_path_list (List[str]): List of image paths to preprocess
+        input_resolution (tuple[int]): Input resolution represented as (height, width)
 
     Returns:
         List: List of PIL Images (BGR format)
         Torch tensor: Array of images preprocessed as a
-        Torch tensor (RGB format)
+            Torch tensor (RGB format)
 
     """
+    if not input_resolution:
+        input_resolution = Image.open(img_path_list[0]).size
 
     preprocess = Compose(
         [
@@ -47,47 +34,30 @@ def preprocess_imgs(input_resolution=(720, 1280)):
 
     images = []
 
-    for filename in [
-        filename for filename in os.listdir(skimage.data_dir) if filename.endswith(".png") or filename.endswith(".jpg")
-    ]:
-        name = os.path.splitext(filename)[0]
-        if name not in descriptions:
-            continue
-
-        image = preprocess(Image.open(os.path.join(skimage.data_dir, filename)).convert("RGB"))
+    for filename in [filename for filename in img_path_list if filename.endswith(".png") or filename.endswith(".jpg")]:
+        image = preprocess(Image.open(filename).convert("RGB"))
         images.append(image)
 
     image_input = torch.tensor(np.stack(images)).cuda()
     image_input -= image_mean[:, None, None]
     image_input /= image_std[:, None, None]
-    print("image stack size:")
-    print(image_input.size())
 
     return images, image_input
 
 
-def preprocess_texts(context_length):
+def preprocess_texts(caption_list, context_length):
     """Preprocess list of texts for CLIP.
 
     Args:
+        caption_list (List[str]): List of captions
         context_length (int): CLIP model parameter
 
     Returns:
         Torch tensor: Array of preprocessed texts
 
     """
-    texts = []
-    for filename in [
-        filename for filename in os.listdir(skimage.data_dir) if filename.endswith(".png") or filename.endswith(".jpg")
-    ]:
-        name = os.path.splitext(filename)[0]
-        if name not in descriptions:
-            continue
-
-        texts.append(descriptions[name])
-
     tokenizer = SimpleTokenizer()
-    text_tokens = [tokenizer.encode("This is " + desc) for desc in texts]
+    text_tokens = [tokenizer.encode("This is " + desc) for desc in caption_list]
 
     text_input = torch.zeros(len(text_tokens), context_length, dtype=torch.long)
     sot_token = tokenizer.encoder["<|startoftext|>"]

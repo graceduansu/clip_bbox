@@ -39,10 +39,10 @@ annotate:  ## run type checking
 # TESTS #
 #########
 test: ## clean and run unit tests
-	python -m pytest -v clip_bbox/tests
+	python -m pytest -v clip_bbox/tests --disable-warnings
 
 coverage:  ## clean and run unit tests with coverage
-	python -m pytest -v clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing
+	python -m pytest -v clip_bbox/tests --cov=clip_bbox --cov-branch --cov-fail-under=50 --cov-report term-missing --disable-warnings
 
 # Alias
 tests: test
