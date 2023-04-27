@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import os
 from .model import build_model
+from .clip import load
 
 # os.path.abspath(os.path.dirname(__file__))
 
@@ -46,11 +47,15 @@ def get_clip_model(device, model_name="RN50", input_res=(720, 1280)):
     input_resolution = input_res
 
     if not os.path.exists("model.pt"):
-        os.system("wget {} -O model.pt".format(MODELS[model_name]))
+        os.system("wget -q {} -O model.pt".format(MODELS[model_name]))
 
-    clip_model = torch.load("model.pt", map_location=device).eval()
-    context_length = clip_model.context_length.item()
-    vocab_size = clip_model.vocab_size.item()
+    clip_model, _ = load("model.pt", device, jit=False, download_root='./')
+    clip_model = clip_model.eval()
+    # clip_model = torch.load("model.pt", map_location=device).eval()
+    context_length = clip_model.context_length
+    # context_length = clip_model.context_length.item()
+    vocab_size = clip_model.vocab_size
+    # vocab_size = clip_model.vocab_size.item()
     # print("model location: ", clip_model.device)
 
     print(

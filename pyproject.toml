@@ -22,7 +22,8 @@ dependencies = [
     "opencv-python", 
     "matplotlib", 
     "scikit-image",
-    "scipy"
+    "scipy",
+    "tqdm"
     ]
 
 classifiers = [
