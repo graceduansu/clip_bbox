@@ -42,6 +42,8 @@ def run_clip_bbox(img_path, caption, out_path):
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    print('torch device:', device)
+
     input_resolution = (720, 1280)
     images, image_input = preprocess.preprocess_imgs([img_path], device, input_resolution=input_resolution)
 

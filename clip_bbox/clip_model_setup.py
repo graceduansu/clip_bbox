@@ -48,9 +48,10 @@ def get_clip_model(device, model_name="RN50", input_res=(720, 1280)):
     if not os.path.exists("model.pt"):
         os.system("wget {} -O model.pt".format(MODELS[model_name]))
 
-    clip_model = torch.jit.load("model.pt").eval().to(device)
+    clip_model = torch.load("model.pt", map_location=device).eval()
     context_length = clip_model.context_length.item()
     vocab_size = clip_model.vocab_size.item()
+    # print("model location: ", clip_model.device)
 
     print(
         "Model parameters:",

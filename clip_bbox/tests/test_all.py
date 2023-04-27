@@ -5,6 +5,12 @@ import clip_bbox.clipbbox as cb
 from PIL import Image
 from PIL import ImageChops
 
+# import os
+
+# os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID" #If the line below doesn't work, uncomment this line
+# (make sure to comment the line below); it should help.
+# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 
 def imgs_are_same(img1_path, img2_path):
     img1 = Image.open(img1_path).convert('RGB')
