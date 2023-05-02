@@ -39,6 +39,8 @@ def preprocess_imgs(img_path_list, device, input_resolution=None):
         images.append(image)
 
     image_input = torch.tensor(np.stack(images)).to(device)
+    image_input = image_input.detach().cpu().type(torch.FloatTensor)
+
     image_input -= image_mean[:, None, None]
     image_input /= image_std[:, None, None]
 
@@ -68,5 +70,6 @@ def preprocess_texts(caption_list, context_length, device):
         text_input[i, : len(tokens)] = torch.tensor(tokens)
 
     text_input = text_input.to(device)
+    text_input = text_input.detach().cpu().type(torch.FloatTensor)
 
     return text_input

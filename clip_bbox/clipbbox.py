@@ -40,7 +40,7 @@ def run_clip_bbox(img_path, caption, out_path):
         None
 
     """
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
 
     print('torch device:', device)
 
