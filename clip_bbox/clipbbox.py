@@ -6,27 +6,54 @@ from . import clip_model_setup
 from . import bbox_utils
 from . import preprocess
 
-# TODO: arg parser for bbox params
+import argparse
+
+# import numpy as np
 
 
-def run_clip_bbox(input_res):
+def get_command_line_args():
+    """Receives command line arguments specifiying input values to clip_bbox.
+
+    Returns:
+        args (argparse object): Object storing each argument with its corresponding command line input.
+
+    """
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--imgpath', help="path to input image")
+    parser.add_argument('-c', '--caption', help="caption of input image")
+    parser.add_argument('-o', '--outpath', help="path to output image displaying bounding boxes")
+    parser.add_argument('-h', '--height', help="height of output image")
+    parser.add_argument('-w', '--width', help="width of output image")
+
+    args = parser.parse_args()
+    return args
+
+
+def run_clip_bbox(img_path, caption, out_path):
     """Draws bounding boxes on an input image.
 
     Args:
-        input_res (tuple[int]): Input resolution represented as (height, width)
+        img_path (str): path to input image
+        caption (str): caption of input image
+        out_path (str): path to output image displaying bounding boxes
 
     Returns:
         None
 
     """
+    device = torch.device("cpu")
 
-    # TODO: add argument for image path
+    print('torch device:', device)
 
-    input_resolution = input_res
-    model_modded = clip_model_setup.get_clip_model()
+    input_resolution = (720, 1280)
+    images, image_input = preprocess.preprocess_imgs([img_path], device, input_resolution=input_resolution)
 
-    images, image_input = preprocess.preprocess_imgs()
-    text_input = preprocess.preprocess_texts(model_modded.context_length)
+    # TODO: make img_fts_to_heatmap accept all resolutions
+    # input_resolution = images[0].size()[1:]
+
+    model_modded = clip_model_setup.get_clip_model(device, input_res=input_resolution)
+    text_input = preprocess.preprocess_texts([caption], model_modded.context_length, device)
 
     with torch.no_grad():
         image_features = model_modded.encode_image(image_input).float()
@@ -35,20 +62,20 @@ def run_clip_bbox(input_res):
     # get bbox results
     img_fts = image_features[1:]
     # print("fts size: ", img_fts.size())
+    # torch.save(img_fts, "rocket_img_fts.pt")
+    # torch.save(text_features, "rocket_txt_fts.pt")
 
     heatmap_list = img_fts_to_heatmap(img_fts, text_features)
     pred_bboxes = []
     for h in range(len(heatmap_list)):
-        title = "Image " + str(h)
         heat = heatmap_list[h]
+        # np.savez("heat.npz", heat)
         bboxes = bbox_utils.heat2bbox(heat, input_resolution)
         pred_bboxes.append([torch.tensor(b["bbox_normalized"]).unsqueeze(0) for b in bboxes])
-        save_path = "img_{}_bbox.png".format(h)
         bbox_utils.img_heat_bbox_disp(
             images[h].permute(1, 2, 0).cpu(),
             heat,
-            save_path,
-            title=title,
+            out_path,
             bboxes=bboxes,
             order="xyxy",
         )
@@ -73,7 +100,7 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     txt_norm = txt_fts / txt_fts.norm(dim=-1, keepdim=True)
 
     batch_size = len(txt_norm)
-    print(batch_size)
+    # print(batch_size)
 
     # img_norm = F.interpolate(img_norm.permute(2,1,0), size=int(input_resolution[0]*input_resolution[1]/64),
     #      mode='nearest').permute(2,1,0)
@@ -82,8 +109,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     img_reshape = torch.reshape(img_norm, (22, 40, batch_size, img_fts.size()[2]))
     # img_reshape = torch.reshape(img_norm, (7, 7, batch_size, 1024))
     # img_reshape = torch.reshape(img_norm, (resize, resize, batch_size, img_fts.size()[0]))
-    print(img_reshape.shape)
-    print(txt_norm.shape)
+    # print(img_reshape.shape)
+    # print(txt_norm.shape)
 
     img_reshape = img_reshape.cpu()
 
@@ -94,8 +121,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     # my loop
     heatmap_list = []
     for h in range(batch_size):
-        maxi = heatmap_norm[:, :, h, h].max()
-        print(maxi)
+        # maxi = heatmap_norm[:, :, h, h].max()
+        # print(maxi)
         hm = -1.0 * heatmap_norm[:, :, h, h] + heatmap_norm[:, :, h, h].max()
         # hm = hm / np.linalg.norm(hm)
         heatmap_list.append(hm)
@@ -104,4 +131,5 @@ def img_fts_to_heatmap(img_fts, txt_fts):
 
 
 if __name__ == "__main__":
-    run_clip_bbox(input_res=(720, 1280))
+    args = get_command_line_args()
+    run_clip_bbox(args.imgpath, args.caption, args.outpath)

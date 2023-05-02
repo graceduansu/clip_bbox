@@ -165,12 +165,14 @@ class ModifiedResNet(nn.Module):
 
     def forward(self, x):
         def stem(x):
+            device = x.device
+
             for conv, bn in [
                 (self.conv1, self.bn1),
                 (self.conv2, self.bn2),
                 (self.conv3, self.bn3),
             ]:
-                x = x.cuda()
+                x = x.to(device)
                 x = self.relu(bn(conv(x)))
             x = self.avgpool(x)
             return x
@@ -182,7 +184,7 @@ class ModifiedResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         x = self.attnpool(x)
-        print("output size: ", x.size())
+        # print("output size: ", x.size())
 
         return x
 
@@ -407,7 +409,7 @@ class CLIP(nn.Module):
 
     def encode_text(self, text):
         # self = MyDataParallel(self, device_ids=[0,1,2,3])
-        x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
+        x = self.token_embedding(text.type(torch.LongTensor)).type(self.dtype)  # [batch_size, n_ctx, d_model]
 
         x = x + self.positional_embedding.type(self.dtype)
         x = x.permute(1, 0, 2)  # NLD -> LND
@@ -513,6 +515,6 @@ def build_model(state_dict: dict):
         if key in state_dict:
             del state_dict[key]
 
-    convert_weights(model)
+    # convert_weights(model)
     model.load_state_dict(state_dict)
     return model.eval()

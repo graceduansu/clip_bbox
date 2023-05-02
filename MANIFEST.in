@@ -9,7 +9,7 @@ include pyproject.toml
 include Makefile
 include requirements.txt
 include docs/images/example_output.png
-
+include .coveragerc
 
 recursive-include docs *.bat
 recursive-include docs *.md

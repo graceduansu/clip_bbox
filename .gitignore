@@ -1,5 +1,4 @@
-*.txt.gz
-*.pt 
+model.pt 
 clip_bbox/*.png
 
 .vscode/

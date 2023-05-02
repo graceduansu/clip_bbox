@@ -17,6 +17,9 @@
 
 Given an image and a natural language text label, `CLIP_BBox` will obtain the image's spatial embedding and text label's embedding from CLIP, compute the similarity heatmap between the embeddings, then draw a bounding box around the image region with the highest image-text correspondence. 
 
+## Note
+The files for building the CLIP model (`clip.py`, `model.py`, `newpad.py`, `simple_tokenizer.py`) are third-party code from the [CLIP repo](https://github.com/openai/CLIP). They are not included in test coverage.
+
 ### Features
 
 The library will provide functions for the following operations:
@@ -35,9 +38,9 @@ Use pip to install clip_bbox as a Python package:
 
 ### Use As a Command Line Script
 
-To draw bounding boxes on an image, run
+To draw bounding boxes on an image and its caption, run
 
-    $ python clip_bbox.py --img "path/to/img.png" 
+    $ python clip_bbox.py --imgpath "path/to/img.png" --caption "caption of your image" --outpath "path/to/output_path.png"
 
 ### Use As a Python Module
 
@@ -46,5 +49,5 @@ To draw bounding boxes on an image, do the following:
 ```python
 from clip_bbox import run_clip_bbox
 
-run_clip_bbox('path/to/img.png')
+run_clip_bbox("path/to/img.png", "caption of your image", "path/to/output_path.png")
 ```
