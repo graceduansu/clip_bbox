@@ -17,6 +17,9 @@
 
 Given an image and a natural language text label, `CLIP_BBox` will obtain the image's spatial embedding and text label's embedding from CLIP, compute the similarity heatmap between the embeddings, then draw a bounding box around the image region with the highest image-text correspondence. 
 
+## Note
+The files for building the CLIP model (`clip.py`, `model.py`, `newpad.py`, `simple_tokenizer.py`) are third-party code from the [CLIP repo](https://github.com/openai/CLIP). They are not included in test coverage.
+
 ### Features
 
 The library will provide functions for the following operations:

@@ -1,0 +1,3 @@
+[run]
+omit = */__init__.py, clip_bbox/clip.py, clip_bbox/model.py, clip_bbox/newpad.py, 
+    clip_bbox/simple_tokenizer.py
