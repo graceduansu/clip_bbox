@@ -8,6 +8,8 @@ from . import preprocess
 
 import argparse
 
+# import numpy as np
+
 
 def get_command_line_args():
     """Receives command line arguments specifiying input values to clip_bbox.
@@ -60,11 +62,14 @@ def run_clip_bbox(img_path, caption, out_path):
     # get bbox results
     img_fts = image_features[1:]
     # print("fts size: ", img_fts.size())
+    # torch.save(img_fts, "rocket_img_fts.pt")
+    # torch.save(text_features, "rocket_txt_fts.pt")
 
     heatmap_list = img_fts_to_heatmap(img_fts, text_features)
     pred_bboxes = []
     for h in range(len(heatmap_list)):
         heat = heatmap_list[h]
+        # np.savez("heat.npz", heat)
         bboxes = bbox_utils.heat2bbox(heat, input_resolution)
         pred_bboxes.append([torch.tensor(b["bbox_normalized"]).unsqueeze(0) for b in bboxes])
         bbox_utils.img_heat_bbox_disp(
@@ -95,7 +100,7 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     txt_norm = txt_fts / txt_fts.norm(dim=-1, keepdim=True)
 
     batch_size = len(txt_norm)
-    print(batch_size)
+    # print(batch_size)
 
     # img_norm = F.interpolate(img_norm.permute(2,1,0), size=int(input_resolution[0]*input_resolution[1]/64),
     #      mode='nearest').permute(2,1,0)
@@ -104,8 +109,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     img_reshape = torch.reshape(img_norm, (22, 40, batch_size, img_fts.size()[2]))
     # img_reshape = torch.reshape(img_norm, (7, 7, batch_size, 1024))
     # img_reshape = torch.reshape(img_norm, (resize, resize, batch_size, img_fts.size()[0]))
-    print(img_reshape.shape)
-    print(txt_norm.shape)
+    # print(img_reshape.shape)
+    # print(txt_norm.shape)
 
     img_reshape = img_reshape.cpu()
 
@@ -116,8 +121,8 @@ def img_fts_to_heatmap(img_fts, txt_fts):
     # my loop
     heatmap_list = []
     for h in range(batch_size):
-        maxi = heatmap_norm[:, :, h, h].max()
-        print(maxi)
+        # maxi = heatmap_norm[:, :, h, h].max()
+        # print(maxi)
         hm = -1.0 * heatmap_norm[:, :, h, h] + heatmap_norm[:, :, h, h].max()
         # hm = hm / np.linalg.norm(hm)
         heatmap_list.append(hm)

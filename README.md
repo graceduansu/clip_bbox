@@ -38,9 +38,9 @@ Use pip to install clip_bbox as a Python package:
 
 ### Use As a Command Line Script
 
-To draw bounding boxes on an image, run
+To draw bounding boxes on an image and its caption, run
 
-    $ python clip_bbox.py --img "path/to/img.png" 
+    $ python clip_bbox.py --imgpath "path/to/img.png" --caption "caption of your image" --outpath "path/to/output_path.png"
 
 ### Use As a Python Module
 
@@ -49,5 +49,5 @@ To draw bounding boxes on an image, do the following:
 ```python
 from clip_bbox import run_clip_bbox
 
-run_clip_bbox('path/to/img.png')
+run_clip_bbox("path/to/img.png", "caption of your image", "path/to/output_path.png")
 ```

@@ -115,7 +115,7 @@ def img_heat_bbox_disp(
     order=None,
 ):
     """Draw bounding boxes on image and overlay the
-    corresponding heatmap.
+    corresponding heatmap. Saves result to save_path.
 
     Args:
         image (numpy array): Image stored in RGB format
@@ -135,6 +135,7 @@ def img_heat_bbox_disp(
 
     """
 
+    # np.save("rocket.npy", image)
     H, W = image.shape[0:2]
     # resize heat map
     heat_map_resized = cv2.resize(heat_map, (W, H))
@@ -168,7 +169,7 @@ def img_heat_bbox_disp(
                     int(bbox_norm[3] * H),
                 )
             x_length, y_length = x_max - x_min, y_max - y_min
-            print(x_min, y_min, x_length, y_length)
+
             box = plt.Rectangle(
                 (x_min, y_min),
                 x_length,

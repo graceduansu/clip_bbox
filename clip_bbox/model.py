@@ -184,7 +184,7 @@ class ModifiedResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         x = self.attnpool(x)
-        print("output size: ", x.size())
+        # print("output size: ", x.size())
 
         return x
 
