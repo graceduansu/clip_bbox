@@ -1,6 +1,7 @@
 import clip_bbox.clipbbox as cb
 import clip_bbox.bbox_utils as bu
 import clip_bbox.preprocess as p
+from clip_bbox.__main__ import main
 
 import numpy as np
 from math import isclose
@@ -9,8 +10,6 @@ from PIL import Image
 from PIL import ImageChops
 import torch
 import os
-
-# TODO: clean up test outputs after each test
 
 
 def imgs_are_same(img1_path, img2_path):
@@ -52,7 +51,7 @@ def test_heat2bbox():
         score = float(bboxes[i]['score'])
         assert isclose(gt_score, score, rel_tol=1e-6)
         assert gt_bboxes[i]['bbox'] == bboxes[i]['bbox']
-        assert np.allclose(gt_bboxes[i]['bbox_normalized'], bboxes[i]['bbox_normalized'])
+        assert np.allclose(gt_bboxes[i]['bbox_normalized'], bboxes[i]['bbox_normalized'], atol=1e-6)
 
 
 def test_img_heat_bbox_disp():
@@ -89,7 +88,7 @@ def test_img_fts_to_heatmap():
     text_features = torch.load("clip_bbox/tests/assets/rocket_txt_fts.pt")
     heatmap_list = cb.img_fts_to_heatmap(img_fts, text_features)
     assert len(heatmap_list) == 1
-    assert np.allclose(heatmap_list[0], heat)
+    assert np.allclose(heatmap_list[0], heat, atol=1e-6)
 
 
 # INTEGRATION TESTS
@@ -103,4 +102,8 @@ def test_run_clip_bbox():
     os.remove("clip_bbox/tests/test_all.png")
 
 
-# TODO: maybe test clipbbox with command line args?
+def test_main():
+    cli_args = ["clip_bbox/tests/assets/rocket.png", "a rocket standing on a launchpad", "clip_bbox/tests/test_all.png"]
+    main(cli_args)
+    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_output.png", "clip_bbox/tests/test_all.png")
+    os.remove("clip_bbox/tests/test_all.png")

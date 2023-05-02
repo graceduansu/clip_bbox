@@ -22,11 +22,11 @@ The files for building the CLIP model (`clip.py`, `model.py`, `newpad.py`, `simp
 
 ### Features
 
-The library will provide functions for the following operations:
+The library provides functions for the following operations:
 * Getting and appropriately reshaping an image's spatial embedding from the CLIP model before it performs attention-pooling
-* Getting a text snippet's embedding from the CLIP model
-* Computing the similarity heatmap between a pair of spatial and text embeddings from CLIP
-* Drawing bounding boxes on an image, given a similarity heatmap and a similarity threshold
+* Getting a text snippet's embedding from CLIP
+* Computing the similarity heatmap between an image's spatial and text embeddings from CLIP
+* Drawing bounding boxes on an image, given a similarity heatmap
 
 ## Install
 
@@ -34,17 +34,28 @@ Use pip to install clip_bbox as a Python package:
 
     $ pip install clip-bbox
 
-## Example Usage
+## Usage Examples
 
-### Use As a Command Line Script
+### Command Line Script
+```
+usage: python -m clip_bbox [-h] imgpath caption outpath
 
-To draw bounding boxes on an image and its caption, run
+positional arguments:
+  imgpath     path to input image
+  caption     caption of input image
+  outpath     path to output image displaying bounding boxes
 
-    $ python clip_bbox.py --imgpath "path/to/img.png" --caption "caption of your image" --outpath "path/to/output_path.png"
+optional arguments:
+  -h, --help  show this help message and exit
+```
 
-### Use As a Python Module
+To draw bounding boxes on an image based on its caption, run
 
-To draw bounding boxes on an image, do the following:
+    $ python -m clip_bbox "path/to/img.png" "caption of your image" "path/to/output_path.png"
+
+### Python Module
+
+To draw bounding boxes on an image based on its caption, do the following:
 
 ```python
 from clip_bbox import run_clip_bbox

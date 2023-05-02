@@ -6,29 +6,6 @@ from . import clip_model_setup
 from . import bbox_utils
 from . import preprocess
 
-import argparse
-
-# import numpy as np
-
-
-def get_command_line_args():
-    """Receives command line arguments specifiying input values to clip_bbox.
-
-    Returns:
-        args (argparse object): Object storing each argument with its corresponding command line input.
-
-    """
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--imgpath', help="path to input image")
-    parser.add_argument('-c', '--caption', help="caption of input image")
-    parser.add_argument('-o', '--outpath', help="path to output image displaying bounding boxes")
-    parser.add_argument('-h', '--height', help="height of output image")
-    parser.add_argument('-w', '--width', help="width of output image")
-
-    args = parser.parse_args()
-    return args
-
 
 def run_clip_bbox(img_path, caption, out_path):
     """Draws bounding boxes on an input image.
@@ -128,8 +105,3 @@ def img_fts_to_heatmap(img_fts, txt_fts):
         heatmap_list.append(hm)
 
     return heatmap_list
-
-
-if __name__ == "__main__":
-    args = get_command_line_args()
-    run_clip_bbox(args.imgpath, args.caption, args.outpath)
