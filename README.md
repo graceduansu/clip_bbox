@@ -8,7 +8,7 @@
 [![GitHub](https://img.shields.io/github/license/graceduansu/clip_bbox)](./LICENSE)
 ![GitHub issues](https://img.shields.io/github/issues/graceduansu/clip_bbox)
 [![PyPI](https://img.shields.io/pypi/v/clip-bbox)](https://pypi.org/project/clip-bbox/)
-[![Documentation Status](https://readthedocs.org/projects/clip-bbox/badge/?version=stable)](https://clip-bbox.readthedocs.io/en/stable/?badge=stable)
+[![Documentation Status](https://readthedocs.org/projects/clip-bbox/badge/?version=latest)](https://clip-bbox.readthedocs.io)
 
 
 ## Overview

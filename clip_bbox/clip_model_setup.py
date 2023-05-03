@@ -35,7 +35,9 @@ def get_clip_model(device, model_name="RN50", input_res=(720, 1280)):
     desired input resolution.
 
     Args:
-        model_name (str): Description of arg1
+        model_name (str): The name of the desired CLIP model to download. The options are "RN50", "RN101", "RN50x4", or
+            "ViT-B/32".
+
         input_res (tuple[int]): Input resolution represented as (height, width)
 
     Returns:
