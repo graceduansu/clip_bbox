@@ -15,8 +15,7 @@ def preprocess_imgs(img_path_list, device, input_resolution=None):
 
     Returns:
         List[Torch tensor]: List of images
-        Torch tensor: Array of images preprocessed as a
-            Torch tensor
+        Torch tensor: Array of images preprocessed as a Torch tensor
 
     """
     if not input_resolution:
