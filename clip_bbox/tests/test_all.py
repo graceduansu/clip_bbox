@@ -17,7 +17,12 @@ def imgs_are_same(img1_path, img2_path):
     img2 = Image.open(img2_path).convert('RGB')
 
     equal_size = img1.height == img2.height and img1.width == img2.width
-    equal_content = len(set(ImageChops.difference(img1, img2).getbbox())) < 5
+    diff = ImageChops.difference(img1, img2).getbbox()
+
+    if diff:
+        equal_content = len(set(diff)) < 5
+    else:
+        equal_content = True
 
     return equal_size and equal_content
 
@@ -56,11 +61,11 @@ def test_heat2bbox():
 
 def test_img_heat_bbox_disp():
     image = np.load("clip_bbox/tests/assets/rocket.npy")
-    fig = bu.img_heat_bbox_disp(
-        image, heat, "clip_bbox/tests/test_img_heat_bbox_disp.png", bboxes=gt_bboxes, order="xyxy"
-    )
+    fig = bu.img_heat_bbox_disp(image, heat, "clip_bbox/tests/test_img_heat_bbox_disp.png", bboxes=gt_bboxes)
     assert isinstance(fig, Figure)
-    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_output.png", "clip_bbox/tests/test_img_heat_bbox_disp.png")
+    assert imgs_are_same(
+        "clip_bbox/tests/assets/test_img_heat_bbox_disp-gt_output.png", "clip_bbox/tests/test_img_heat_bbox_disp.png"
+    )
     os.remove("clip_bbox/tests/test_img_heat_bbox_disp.png")
 
 
@@ -96,14 +101,22 @@ def test_img_fts_to_heatmap():
 
 def test_run_clip_bbox():
     cb.run_clip_bbox(
-        "clip_bbox/tests/assets/rocket.png", "a rocket standing on a launchpad", "clip_bbox/tests/test_all.png"
+        "clip_bbox/tests/assets/rocket.png", "a rocket standing on a launchpad", "clip_bbox/tests/test_all-rocket.png"
     )
-    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_output.png", "clip_bbox/tests/test_all.png")
-    os.remove("clip_bbox/tests/test_all.png")
+    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_rocket.png", "clip_bbox/tests/test_all-rocket.png")
+    os.remove("clip_bbox/tests/test_all-rocket.png")
+
+    cb.run_clip_bbox("clip_bbox/tests/assets/camera.png", "a camera on a tripod", "clip_bbox/tests/test_all-camera.png")
+    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_camera.png", "clip_bbox/tests/test_all-camera.png")
+    os.remove("clip_bbox/tests/test_all-camera.png")
 
 
 def test_main():
-    cli_args = ["clip_bbox/tests/assets/rocket.png", "a rocket standing on a launchpad", "clip_bbox/tests/test_all.png"]
+    cli_args = [
+        "clip_bbox/tests/assets/rocket.png",
+        "a rocket standing on a launchpad",
+        "clip_bbox/tests/test_all-rocket.png",
+    ]
     main(cli_args)
-    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_output.png", "clip_bbox/tests/test_all.png")
-    os.remove("clip_bbox/tests/test_all.png")
+    assert imgs_are_same("clip_bbox/tests/assets/test_all-gt_rocket.png", "clip_bbox/tests/test_all-rocket.png")
+    os.remove("clip_bbox/tests/test_all-rocket.png")

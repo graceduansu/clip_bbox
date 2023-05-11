@@ -11,11 +11,11 @@
 [![Documentation Status](https://readthedocs.org/projects/clip-bbox/badge/?version=latest)](https://clip-bbox.readthedocs.io)
 
 
-## Overview
+## Overview / About
 
 [CLIP](https://github.com/openai/CLIP) is a neural network, pretrained on image-text pairs, that can predict the most relevant text snippet for a given image. 
 
-Given an image and a natural language text label, `CLIP_BBox` will obtain the image's spatial embedding and text label's embedding from CLIP, compute the similarity heatmap between the embeddings, then draw a bounding box around the image region with the highest image-text correspondence. 
+Given an image and a natural language text label, `CLIP_BBox` will obtain the image's spatial embedding and text label's embedding from CLIP, compute the similarity heatmap between the embeddings, then draw bounding boxes around the image regions with the highest image-text correspondences. 
 
 ## Note
 The files for building the CLIP model (`clip.py`, `model.py`, `newpad.py`, `simple_tokenizer.py`) are third-party code from the [CLIP repo](https://github.com/openai/CLIP). They are not included in test coverage.
@@ -62,3 +62,8 @@ from clip_bbox import run_clip_bbox
 
 run_clip_bbox("path/to/img.png", "caption of your image", "path/to/output_path.png")
 ```
+
+### Example Output
+Here is an example output image for the caption `"a camera on a tripod"`:
+
+![example output](./clip_bbox/tests/assets/test_all-gt_camera.png)
