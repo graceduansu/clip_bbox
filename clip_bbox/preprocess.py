@@ -10,16 +10,21 @@ def preprocess_imgs(img_path_list, device, input_resolution=None):
     """Preprocess list of images for CLIP.
 
     Args:
-        img_path_list (List[str]): List of image paths to preprocess
-        input_resolution (tuple[int]): Input resolution represented as (height, width)
+        img_path_list (List[str]): List of image paths to preprocess.
+        device (Torch.device): Device Torch should use to run CLIP. For example, the device can be
+            `torch.device("cpu")` or `torch.device("cuda")`
+
+        input_resolution (tuple[int]): Input resolution represented as (height, width). If not
+            specified, the default value will be the first input image's original dimensions.
 
     Returns:
-        List[Torch tensor]: List of images
-        Torch tensor: Array of images preprocessed as a Torch tensor
+        List[Torch tensor]: List of images.
+        Torch tensor: Array of images preprocessed as a Torch tensor.
 
     """
     if not input_resolution:
         input_resolution = Image.open(img_path_list[0]).size
+        input_resolution = (input_resolution[1], input_resolution[0])
 
     preprocess = Compose(
         [
@@ -53,11 +58,13 @@ def preprocess_texts(caption_list, context_length, device):
     """Preprocess list of texts for CLIP.
 
     Args:
-        caption_list (List[str]): List of captions
-        context_length (int): CLIP model parameter
+        caption_list (List[str]): List of captions.
+        context_length (int): CLIP model parameter.
+        device (Torch.device): Device Torch should use to run CLIP. For example, the device can be
+            `torch.device("cpu")` or `torch.device("cuda")`
 
     Returns:
-        Torch tensor: Array of preprocessed texts
+        Torch tensor: Array of preprocessed texts.
 
     """
     tokenizer = SimpleTokenizer()

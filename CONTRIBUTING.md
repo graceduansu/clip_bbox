@@ -22,12 +22,14 @@ This project is a pure python project using modern tooling. It uses a `Makefile`
 - `make`: list available commands
 - `make develop`: install and build this library and its dependencies using `pip`
 - `make build`: build the library using `setuptools`
+- `make check`: check library assets for packaging
 - `make lint`: perform static analysis of this library with `flake8` and `black`
 - `make format`: autoformat this library using `black`
-- `make annotate`: run type checking using `mypy`
 - `make test`: run automated tests with `pytest`
 - `make coverage`: run automated tests with `pytest` and collect coverage information
 - `make dist`: package library for distribution
+- `make clean`: clean the repository
+- `make docs`: clean and build the documentation website
 
 ## Before Opening a Pull Request
 
@@ -37,9 +39,9 @@ Be sure to check code quality by confirming that the following commands run succ
 
     $ make clean
     $ make lint
-    $ make annotate
     $ make coverage
-    $ make test
+    $ make check
+    $ make docs
 
 ## Submitting Changes
 Once you are done making changes on your own fork of `clip_bbox`, make a pull request to this repository to submit your changes. 

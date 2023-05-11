@@ -127,9 +127,6 @@ def available_models() -> List[str]:
     return list(_MODELS.keys())
 
 
-# TODO: type checking?
-
-
 def load(
     name: str,
     device: Union[str, torch.device] = "cuda" if torch.cuda.is_available() else "cpu",
