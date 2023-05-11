@@ -35,13 +35,15 @@ def get_clip_model(device, model_name="RN50", input_res=(720, 1280)):
     desired input resolution.
 
     Args:
+        device (Torch.device): Device Torch should use to run CLIP. For example, the device can be
+            `torch.device("cpu")` or `torch.device("cuda")`
         model_name (str): The name of the desired CLIP model to download. The options are "RN50", "RN101", "RN50x4", or
             "ViT-B/32".
 
-        input_res (tuple[int]): Input resolution represented as (height, width)
+        input_res (tuple[int]): Input resolution represented as (height, width).
 
     Returns:
-        Modified Torch model accepting the desired input resolution
+        Modified Torch model accepting the desired input resolution.
 
     """
     print("Torch version:", torch.__version__)

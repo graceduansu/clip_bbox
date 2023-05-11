@@ -15,13 +15,13 @@ def heat2bbox(heat_map, original_image_shape):
     """Calculate bounding boxes on a 2D heatmap.
 
     Args:
-        heat_map (numpy array): 2D heatmap of values
+        heat_map (numpy array): 2D heatmap of values.
         original_image_shape (tuple[int]): original image's
-        dimensions represented as (height, width)
+            dimensions represented as (height, width).
 
     Returns:
         List[tuple[int]]: List of bounding boxes, where each bounding
-        box is a tuple of coordinates (min_x, min_y, max_x, max_y)
+            box is a tuple of coordinates (min_x, min_y, max_x, max_y).
 
     """
     h, w = heat_map.shape
@@ -106,32 +106,26 @@ def img_heat_bbox_disp(
     heat_map,
     save_path,
     title="",
-    en_name="",
     alpha=0.6,
     cmap="viridis",
-    cbar="False",
-    dot_max=False,
     bboxes=[],
-    order=None,
 ):
     """Draw bounding boxes on image and overlay the
     corresponding heatmap. Saves result to save_path.
 
     Args:
-        image (numpy array): Image stored in RGB format
-        heat_map (numpy array): 2D heatmap of values
-        save_path (str): Save path for generated figure
-        title (str): Title on generated figure
-        en_name (str): Text inside figure
-        alpha (float): Transparency of heatmap
-        cmap (str): Matplotlib color map parameter applied to heatmap
-        cbar (bool): Show or hide color bar for heatmap
-        dot_max (bool): Show or hide dots where the heatmap reaches max values
-        bboxes (List[List[int]]): List of bounding boxes
-        order (str): The order of coordinates used for bboxes
+        image (numpy array): Image stored in RGB format.
+        heat_map (numpy array): 2D heatmap of values.
+        save_path (str): Save path for generated figure.
+        title (str): Title on generated figure.
+        alpha (float): Transparency of heatmap.
+        cmap (str): Matplotlib color map parameter applied to heatmap.
+        dot_max (bool): Show or hide dots where the heatmap reaches max values.
+        bboxes (List[List[int]]): List of bounding boxes.
+        order (str): The order of coordinates used for bboxes.
 
     Returns:
-        Matplotlib figure
+        Matplotlib figure.
 
     """
 
@@ -142,32 +136,19 @@ def img_heat_bbox_disp(
     # display
     fig = plt.figure(figsize=(15, 15))
     fig.suptitle(title, size=15)
-    ax = plt.subplot(1, 3, 1)
+    plt.subplot(1, 3, 1)
     plt.imshow(image)
-    if dot_max:
-        max_loc = np.unravel_index(np.argmax(heat_map_resized, axis=None), heat_map_resized.shape)
-        plt.scatter(x=max_loc[1], y=max_loc[0], edgecolor="w", linewidth=3)
 
     if len(bboxes) > 0:  # it gets normalized bbox
-        if order is None:
-            order = "xxyy"
-
         for i in range(len(bboxes)):
             bbox_norm = bboxes[i]["bbox_normalized"]
-            if order == "xxyy":
-                x_min, x_max, y_min, y_max = (
-                    int(bbox_norm[0] * W),
-                    int(bbox_norm[1] * W),
-                    int(bbox_norm[2] * H),
-                    int(bbox_norm[3] * H),
-                )
-            elif order == "xyxy":
-                x_min, x_max, y_min, y_max = (
-                    int(bbox_norm[0] * W),
-                    int(bbox_norm[2] * W),
-                    int(bbox_norm[1] * H),
-                    int(bbox_norm[3] * H),
-                )
+
+            x_min, x_max, y_min, y_max = (
+                int(bbox_norm[0] * W),
+                int(bbox_norm[2] * W),
+                int(bbox_norm[1] * H),
+                int(bbox_norm[3] * H),
+            )
             x_length, y_length = x_max - x_min, y_max - y_min
 
             box = plt.Rectangle(
@@ -179,20 +160,6 @@ def img_heat_bbox_disp(
                 fill=False,
             )
             plt.gca().add_patch(box)
-            if en_name != "":
-                ax.text(
-                    x_min + 0.5 * x_length,
-                    y_min + 10,
-                    en_name,
-                    verticalalignment="center",
-                    horizontalalignment="center",
-                    # transform=ax.transAxes,
-                    color="white",
-                    fontsize=15,
-                )
-                # an = ax.annotate(en_name, xy=(x_min,y_min), xycoords="data", va="center", ha="center",
-                #   bbox=dict(boxstyle="round", fc="w"))
-                # plt.gca().add_patch(an)
 
     plt.imshow(heat_map_resized, alpha=alpha, cmap=cmap)
 
