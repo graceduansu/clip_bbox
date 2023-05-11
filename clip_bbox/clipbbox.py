@@ -9,6 +9,17 @@ from math import sqrt, ceil
 
 
 def get_square_int_factors(n):
+    """Finds the 2 largest integer factors that multiply together to produce n.
+
+    Args:
+        n (int): The target integer.
+
+    Returns:
+        tuple: A tuple containing:
+            - val (int): An integer factor of n.
+            - val2 (int): Another integer factor of n.
+
+    """
     val = ceil(sqrt(n))
     while True:
         if not n % val:

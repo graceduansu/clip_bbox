@@ -18,8 +18,9 @@ def preprocess_imgs(img_path_list, device, input_resolution=None):
             specified, the default value will be the first input image's original dimensions.
 
     Returns:
-        List[Torch tensor]: List of images.
-        Torch tensor: Array of images preprocessed as a Torch tensor.
+        tuple: A tuple containing:
+            - images (List[Torch tensor]): List of images.
+            - image input (Torch tensor): Array of images preprocessed for input to CLIP.
 
     """
     if not input_resolution:
