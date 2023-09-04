@@ -23,7 +23,7 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     # Download (or from cache) and install CUDA Toolkit 11
     # - uses: Jimver/cuda-toolkit@v0.2.9
